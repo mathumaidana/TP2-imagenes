@@ -29,6 +29,18 @@ void blackWhite(ppm& img){
 	}
 }
 
+void shades(ppm& img, unsigned char shades){
+	for(int i = 0; i < img.height; i++) {
+		for(int j = 0; j < img.width; j++) {
+			pixel p = img.getPixel(i,j);
+			int rango = 255 / (shades - 1);
+			int gprima =  (p.r + p.g + p.b) / 3;
+			int g =(gprima / rango) * rango;
+			img.setPixel(i, j, pixel(g,g,g));
+		}
+	}
+}
+
 // COMPLETAR :)
 
 

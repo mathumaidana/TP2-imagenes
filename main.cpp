@@ -38,6 +38,8 @@ int main(int argc , char* argv[]){
 		plain(img, (unsigned char)p1);
 	else if (filter == "blackWhite")
 		blackWhite(img);
+	else if (filter == "shades")
+	shades(img, (unsigned char)p1);
 
 	cout << "Escribiendo imagen" << endl;
 	img.write(out);	
