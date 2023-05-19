@@ -29,6 +29,7 @@ struct pixel{
        b = (b > 255) ? 255 : ((b < 0) ? 0: (unsigned char)b);
        return *this;
     }
+
 };
 
 

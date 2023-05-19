@@ -36,6 +36,8 @@ int main(int argc , char* argv[]){
 
 	if (filter == "plain")
 		plain(img, (unsigned char)p1);
+	else if (filter == "blackWhite")
+		blackWhite(img);
 
 	cout << "Escribiendo imagen" << endl;
 	img.write(out);	

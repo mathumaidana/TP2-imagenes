@@ -6,6 +6,7 @@
 #include "filters.h"
 #include <thread>  
 #include <atomic>  
+#include "ppm.h"
 
 #define BLACK 0
 
@@ -18,15 +19,14 @@ void plain(ppm& img, unsigned char c){
 			img.setPixel(i, j, pixel(c,c,c));
 }
 
-void blackWhite(ppm& img, unsigned char c){
-	for(int i = 0; i < img.height; i++)
-		for(int j = 0; j < img.width; j++)	
-		
-			unsigned char red = img.pixels[i][j].red;
-            unsigned char green = img.pixels[i][j].green;
-            unsigned char blue = img.pixels[i][j].blue;
-
-			img.setPixel(i, j, pixel(c,c,c));
+void blackWhite(ppm& img){
+	for(int i = 0; i < img.height; i++) {
+		for(int j = 0; j < img.width; j++) {
+			pixel p = img.getPixel(i,j);
+			int promedio = (p.r + p.g + p.b) / 3;
+			img.setPixel(i, j, pixel(promedio,promedio,promedio));
+		}
+	}
 }
 
 // COMPLETAR :)
