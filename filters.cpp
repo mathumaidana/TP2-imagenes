@@ -151,6 +151,92 @@ void shades(ppm& img, unsigned char shades){
 	}
 }
 
+void boxBlur(ppm& img) {
+    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+
+    ppm tempImg = img; // Crear una imagen temporal para almacenar los resultados
+
+    // Iterar sobre cada píxel de la imagen
+    for (int i = 1; i < img.height - 1; i++) {
+        for (int j = 1; j < img.width - 1; j++) {
+            int sumR = 0, sumG = 0, sumB = 0;
+
+            // Sumar los valores de los canales de los 9 píxeles vecinos
+            for (int k = -1; k <= 1; k++) {
+                for (int l = -1; l <= 1; l++) {
+                    pixel p = img.getPixel(i + k, j + l);
+                    sumR += p.r;
+                    sumG += p.r;
+                    sumB += p.b;
+                }
+            }
+
+            // Calcular el promedio de los valores sumados
+            int avgR = sumR / 9;
+            int avgG = sumG / 9;
+            int avgB = sumB / 9;
+
+            // Establecer el nuevo valor del píxel en la imagen temporal
+            tempImg.setPixel(i, j, pixel(avgR, avgG, avgB));
+        }
+    }
+
+    img = tempImg; // Reemplazar la imagen original con la imagen filtrada
+
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
+    std::chrono::duration<double> duration = end - start; // Duración en segundos
+
+    std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
+}
+
+
+void sharpen(ppm& img) {
+    std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+
+    ppm tempImg = img; // Crear una imagen temporal para almacenar los resultados
+
+    // Iterar sobre cada píxel de la imagen
+    for (int i = 1; i < img.height - 1; i++) {
+        for (int j = 1; j < img.width - 1; j++) {
+            int sumR = 0, sumG = 0, sumB = 0;
+
+            // Aplicar el efecto del kernel a los píxeles vecinos
+            for (int k = -1; k <= 1; k++) {
+                for (int l = -1; l <= 1; l++) {
+                    pixel p = img.getPixel(i + k, j + l);
+                    int coefficient = 0;
+
+                    // Asignar el valor del coeficiente según la posición en el kernel
+                    if ((k == 0 && l == 0) || (k == 1 && l == 1) || (k == 2 && l == 0))
+                        coefficient = -1;
+                    else if ((k == 1 && l == 0) || (k == 1 && l == 2))
+                        coefficient = 5;
+
+                    sumR += coefficient * p.r;
+                    sumG += coefficient * p.g;
+                    sumB += coefficient * p.b;
+                }
+            }
+
+            // Asegurarse de que los valores de los canales estén en el rango válido
+            int newR = std::min(std::max(sumR, 0), 255);
+            int newG = std::min(std::max(sumG, 0), 255);
+            int newB = std::min(std::max(sumB, 0), 255);
+
+            // Establecer el nuevo valor del píxel en la imagen temporal
+            tempImg.setPixel(i, j, pixel(newR, newG, newB));
+        }
+    }
+
+    img = tempImg; // Reemplazar la imagen original con la imagen filtrada
+
+    std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
+    std::chrono::duration<double> duration = end - start; // Duración en segundos
+
+    std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
+}
+
+
 // COMPLETAR :)
 
 

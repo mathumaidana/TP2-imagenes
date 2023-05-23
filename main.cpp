@@ -51,6 +51,12 @@ int main(int argc , char* argv[]){
 	}
 	else if (filter == "brightness")
 	brightness(img, p1, -1, 1);
+	else if (filter == "boxBlur")
+	boxBlur(img);
+	else if (filter == "sharpen")
+	sharpen(img);
+
+
 	cout << "Escribiendo imagen" << endl;
 	img.write(out);	
 	    
