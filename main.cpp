@@ -45,7 +45,12 @@ int main(int argc , char* argv[]){
 		blackWhite(img);
 	else if (filter == "shades")
 	shades(img, (unsigned char)p1);
-
+	else if (filter == "contrast")
+	{
+	contrast(img, p1);
+	}
+	else if (filter == "brightness")
+	brightness(img, p1, -1, 1);
 	cout << "Escribiendo imagen" << endl;
 	img.write(out);	
 	    
