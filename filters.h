@@ -24,6 +24,9 @@ void plain(ppm &img, unsigned char c);
 
 // FILTROS MULTI-THREAD
 
+void multiPlain(ppm &img, unsigned char c, unsigned int n);
+
+
 // Completar :)
 
 #endif

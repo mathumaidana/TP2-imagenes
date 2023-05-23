@@ -35,7 +35,12 @@ int main(int argc , char* argv[]){
 	cout << "Aplicando filtros"<< endl;
 
 	if (filter == "plain")
+		if (n == 1) {
 		plain(img, (unsigned char)p1);
+		}
+		else {
+			multiPlain(img, (unsigned char)p1, n);
+		}
 	else if (filter == "blackWhite")
 		blackWhite(img);
 	else if (filter == "shades")
