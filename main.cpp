@@ -125,6 +125,10 @@ int main(int argc, char *argv[])
 			multiMerge(img, img2, p1, n);
 		}
 	}
+	else if (filter == "gradiente")
+	{
+		gradiente(img, p1);
+	}
 
 	cout << "Escribiendo imagen" << endl;
 	img.write(out);
