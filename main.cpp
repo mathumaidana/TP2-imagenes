@@ -9,21 +9,23 @@
 
 #define ONE_OVER_BILLION 1E-9
 
-
 using namespace std;
 
 // El siguiente es un template basico que pueden usar como base
 
-int main(int argc , char* argv[]){
-	
+int main(int argc, char *argv[])
+{
+
+	unsigned int numThreads = std::thread::hardware_concurrency();
+	cout << numThreads;
 	// Asumimos que los filtros sin p1 se escriben primero (por lo tanto, el primer p1 es no nulo)
 	// Asumimos que Zoom no se puede encadenar
 
-	if(string(argv[1]) == "-help"){
+	if (string(argv[1]) == "-help")
+	{
 		cout << "Uso: ./main <filtro> <nthreads> <[p1]> <img1> <custom_output> <[p2]> <img2>" << endl;
-		return 0; 
+		return 0;
 	}
-
 	string filter = string(argv[1]);
 	unsigned int n = atoi(argv[2]);
 	float p1 = atof(argv[3]);
@@ -61,7 +63,7 @@ int main(int argc , char* argv[]){
 		}
 		else
 		{
-			// multiShades(img, (unsigned char)p1);
+			multiShades(img, (unsigned char)p1, n);
 		}
 	}
 	else if (filter == "contrast")
@@ -80,7 +82,7 @@ int main(int argc , char* argv[]){
 		}
 		else
 		{
-			// multiBrightness(img, p1, -1, 1);
+			multiBrightness(img, p1, -1, 1, n);
 		}
 	else if (filter == "boxBlur")
 		if (n == 1)
@@ -89,7 +91,7 @@ int main(int argc , char* argv[]){
 		}
 		else
 		{
-			// multiBoxBlur(img);
+			multiBoxBlur(img, n);
 		}
 	else if (filter == "sharpen")
 		if (n == 1)
@@ -98,7 +100,7 @@ int main(int argc , char* argv[]){
 		}
 		else
 		{
-			// multiSharpen(img);
+			multiSharpen(img, n);
 		}
 	else if (filter == "edgeDetection")
 		if (n == 1)
@@ -107,20 +109,26 @@ int main(int argc , char* argv[]){
 		}
 		else
 		{
-			// multiEdgeDetection(img);
+			multiEdgeDetection(img, n);
 		}
 	else if (filter == "merge")
 	{
 		string img2_string(argv[7]);
 		ppm img2(img2_string);
 		float p2 = atof(argv[6]);
-
 		if (n == 1)
 		{
 			merge(img, img2, p1);
 		}
 		else
 		{
-			// multiMerge(img, img2, p1);
+			multiMerge(img, img2, p1, n);
 		}
 	}
+
+	cout << "Escribiendo imagen" << endl;
+	img.write(out);
+
+	cout << "Listo" << endl;
+	return 0;
+}
