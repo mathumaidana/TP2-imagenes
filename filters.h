@@ -21,7 +21,7 @@ void sharpen(ppm &img);
 void zoom(ppm &img, ppm &img_zoomed, int n);
 void edgeDetection(ppm &img); // ppm &img_target, sacamos este argumento por ahora
 void plain(ppm &img, unsigned char c);
-
+void gradiente(ppm &img, int dimension);
 // FILTROS MULTI-THREAD
 
 void multiPlain(ppm &img, unsigned char c, unsigned int n);
