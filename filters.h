@@ -15,10 +15,8 @@ void contrast(ppm &img, float contrast);
 void brightness(ppm &img, float b, int start, int end);
 void shades(ppm &img, unsigned char shades);
 void merge(ppm &img1, ppm &img2, float alpha);
-void frame(ppm &img, pixel color, int x);
 void boxBlur(ppm &img);
 void sharpen(ppm &img);
-void zoom(ppm &img, ppm &img_zoomed, int n);
 void edgeDetection(ppm &img); // ppm &img_target, sacamos este argumento por ahora
 void plain(ppm &img, unsigned char c);
 void gradiente(ppm &img, int dimension);

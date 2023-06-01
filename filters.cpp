@@ -10,7 +10,6 @@
 #include <chrono>
 #include <cmath>
 #include <algorithm>
-#include <semaphore.h>
 
 #define BLACK 0
 
@@ -21,8 +20,8 @@ void plain(ppm &img, unsigned char c)
 {
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
 
-	for (int i = 0; i < img.height - 1; i++)
-		for (int j = 0; j < img.width - 1; j++)
+	for (int i = 0; i < img.height; i++)
+		for (int j = 0; j < img.width; j++)
 			img.setPixel(i, j, pixel(c, c, c));
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
 	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
@@ -30,22 +29,29 @@ void plain(ppm &img, unsigned char c)
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
 
-void brightness(ppm &img, float b, int start, int end)
+void brightness(ppm &img, float brillo, int start, int end)
 {
 	std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
 	for (int i = 0; i < img.height; i++)
-	{
 		for (int j = 0; j < img.width; j++)
 		{
 			pixel p = img.getPixel(i, j);
-			int brillo = static_cast<int>(p.r * b);
-			int r = min(p.r + brillo, 255);
-			int g = min(p.g + brillo, 255);
-			int b = min(p.b + brillo, 255);
 
-			img.setPixel(i, j, pixel(r, g, b));
+			int nuevo_r = p.r + 255 * brillo;
+			int nuevo_g = p.g + 255 * brillo;
+			int nuevo_b = p.b + 255 * brillo;
+
+			if (nuevo_r < 0) nuevo_r = 0;
+			if (nuevo_r > 255) nuevo_r = 255;
+
+			if (nuevo_g < 0) nuevo_g = 0;
+			if (nuevo_g > 255) nuevo_g = 255;
+
+			if (nuevo_b < 0) nuevo_b = 0;
+			if (nuevo_b > 255) nuevo_b = 255;
+
+			img.setPixel(i, j, pixel(nuevo_r, nuevo_g, nuevo_b));
 		}
-	}
 	std::chrono::steady_clock::time_point endTime = std::chrono::steady_clock::now(); // Fin del timer
 	std::chrono::duration<double> duration = endTime - startTime;					  // Duración en segundos
 
@@ -71,20 +77,14 @@ void contrast(ppm &img, float contrast)
 			float nuevo_g = f * g_prima + 128;
 			float nuevo_b = f * b_prima + 128;
 
-			if (nuevo_r < 0)
-				nuevo_r = 0;
-			else if (nuevo_r > 255)
-				nuevo_r = 255;
+			if (nuevo_r < 0) nuevo_r = 0;
+			else if (nuevo_r > 255) nuevo_r = 255;
 
-			if (nuevo_g < 0)
-				nuevo_g = 0;
-			else if (nuevo_g > 255)
-				nuevo_g = 255;
+			if (nuevo_g < 0) nuevo_g = 0;
+			else if (nuevo_g > 255) nuevo_g = 255;
 
-			if (nuevo_b < 0)
-				nuevo_b = 0;
-			else if (nuevo_b > 255)
-				nuevo_b = 255;
+			if (nuevo_b < 0) nuevo_b = 0;
+			else if (nuevo_b > 255) nuevo_b = 255;
 
 			img.setPixel(i, j, pixel(nuevo_r, nuevo_g, nuevo_b));
 		}
@@ -309,9 +309,9 @@ void merge(ppm &img1, ppm &img2, float p1)
 	float p2 = 1 - p1;
 	ppm img_final = img1;
 
-	for (int i = 0; i < img1.height - 1; i++)
+	for (int i = 0; i < img1.height; i++)
 	{
-		for (int j = 0; j < img1.width - 1; j++)
+		for (int j = 0; j < img1.width; j++)
 		{ // Ambas img tienen la misma resolución
 			pixel pixel1 = img1.getPixel(i, j);
 			pixel pixel2 = img2.getPixel(i, j);
@@ -341,7 +341,7 @@ void multiMerge(ppm &img1, ppm &img2, float p1, unsigned int n)
 	{
 		for (int i = start_i; i < end_i; i++)
 		{
-			for (int j = 0; j < img1.width - 1; j++)
+			for (int j = 0; j < img1.width; j++)
 			{ // Both images have the same resolution
 				pixel pixel1 = img1.getPixel(i, j);
 				pixel pixel2 = img2.getPixel(i, j);
@@ -362,7 +362,7 @@ void multiMerge(ppm &img1, ppm &img2, float p1, unsigned int n)
 	for (int t = 0; t < n; t++)
 	{
 		int startRow = t * rowsPerThread;
-		int endRow = (t == n - 1) ? img1.height - 1 : startRow + rowsPerThread;
+		int endRow = (t == n - 1) ? img1.height : startRow + rowsPerThread;
 		threads.emplace_back(mergePixels, startRow, endRow);
 	}
 
@@ -382,9 +382,9 @@ void multiMerge(ppm &img1, ppm &img2, float p1, unsigned int n)
 
 // MULTI
 
-void plainThreads(int iteration, int pixeles, ppm &img, unsigned char c, int resto)
+void plainThreads(ppm &img, unsigned char c, int startRow, int endRow)
 {
-	for (int i = iteration * pixeles; i < pixeles * (iteration + 1)+resto; i++)
+	for (int i = startRow; i < endRow; i++)
 		for (int j = 0; j < img.width; j++)
 			img.setPixel(i, j, pixel(c, c, c));
 }
@@ -393,17 +393,18 @@ void multiPlain(ppm &img, unsigned char c, unsigned int n)
 {
 	std::vector<std::thread> threads;
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-	int pixeles = img.height / n;
-	int resto = img.height % n;
+	int rowsPerThread = img.height / n;
+	int remainingRows = img.height % n;
+	int startRow = 0;
+	int endRow = startRow + rowsPerThread;
 
-	for (int i = 0; i < n; ++i)
+	for (int t = 0; t < n; t++)
 	{
-		if (i == threads.size() - 1)
-		{
-			threads.emplace_back(plainThreads, i, pixeles, std::ref(img), c,resto);
-		}
-		else
-			threads.emplace_back(plainThreads, i, pixeles, std::ref(img), c,0);
+		if (t == n - 1) endRow += remainingRows;
+			// Assign remaining rows to the last thread
+		threads.emplace_back(plainThreads, std::ref(img), c, startRow, endRow);
+		startRow = endRow;
+		endRow = startRow + rowsPerThread;
 	}
 
 	for (std::thread &thread : threads)
@@ -465,9 +466,9 @@ void multiBlackWhite(ppm &img, unsigned int n)
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
 
-void contrastThreads(int iteration, int pixeles, ppm &img, float contrast,int resto)
+void contrastThreads(int startRow, int endRow, ppm &img, float contrast)
 {
-	for (int i = iteration * pixeles; i < pixeles * (iteration + 1)+resto; i++)
+	for (int i = startRow; i < endRow; i++)
 		for (int j = 0; j < img.width; j++)
 		{
 			pixel p = img.getPixel(i, j);
@@ -482,56 +483,36 @@ void contrastThreads(int iteration, int pixeles, ppm &img, float contrast,int re
 			float nuevo_g = f * g_prima + 128;
 			float nuevo_b = f * b_prima + 128;
 
-			if (nuevo_r < 0)
-			{
-				nuevo_r = 0;
-			}
-			else if (nuevo_r > 255)
-			{
-				nuevo_r = 255;
-			}
+			if (nuevo_r < 0) nuevo_r = 0;
+			else if (nuevo_r > 255)nuevo_r = 255;
 
-			if (nuevo_g < 0)
-			{
-				nuevo_g = 0;
-			}
-			else if (nuevo_g > 255)
-			{
-				nuevo_g = 255;
-			}
+			if (nuevo_g < 0) nuevo_g = 0;
+			else if (nuevo_g > 255) nuevo_g = 255;
 
-			if (nuevo_b < 0)
-			{
-				nuevo_b = 0;
-			}
-			else if (nuevo_b > 255)
-			{
-				nuevo_b = 255;
-			}
+			if (nuevo_b < 0) nuevo_b = 0;
+			else if (nuevo_b > 255) nuevo_b = 255;
 
 			img.setPixel(i, j, pixel(nuevo_r, nuevo_g, nuevo_b));
 		}
 }
 
-void multiContrast(ppm &img, float contrast, unsigned int n)
-{
+void multiContrast(ppm &img, float contrast, unsigned int n) {
 	std::vector<std::thread> threads;
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-	int pixeles = img.height / n;
-	int resto = img.height % n;
+	int rowsPerThread = img.height / n;
+	int remainingRows = img.height % n;
 
-	for (int i = 0; i < n; ++i)
-	{
-		if (i == threads.size() - 1)
-		{
-			threads.emplace_back(contrastThreads, i, pixeles, std::ref(img), contrast, resto);
-		}
-		else
-			threads.emplace_back(contrastThreads, i, pixeles, std::ref(img), contrast, 0);
+	int startRow = 0;
+	int endRow = startRow + rowsPerThread;
+
+	for (int t = 0; t < n; t++) {
+		if (t == n - 1) endRow += remainingRows;
+		threads.emplace_back(contrastThreads, startRow, endRow, std::ref(img), contrast);
+		startRow = endRow;
+		endRow = startRow + rowsPerThread;
 	}
 
-	for (std::thread &thread : threads)
-	{
+	for (std::thread &thread : threads) {
 		thread.join();
 	}
 
@@ -541,40 +522,36 @@ void multiContrast(ppm &img, float contrast, unsigned int n)
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
 
-void shadesThreads(int iteration, int pixeles, ppm &img, unsigned char shades,int resto)
+void shadesThreads(int startRow, int endRow, ppm &img, unsigned char shades)
 {
-	for (int i = iteration * pixeles; i < pixeles * (iteration + 1); i++)
-	{
-		for (int j = 0; j < img.width; j++)
-		{
+	for (int i = startRow; i < endRow; i++)
+		for (int j = 0; j < img.width; j++) {
 			pixel p = img.getPixel(i, j);
 			int rango = 255 / (shades - 1);
 			int gprima = (p.r + p.g + p.b) / 3;
 			int g = (gprima / rango) * rango;
 			img.setPixel(i, j, pixel(g, g, g));
 		}
-	}
 }
 
 void multiShades(ppm &img, unsigned char shades, unsigned int n)
 {
 	std::vector<std::thread> threads;
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
-	int pixeles = img.height / n;
-	int resto = img.height % n;
+	int rowsPerThread = img.height / n;
+	int remainingRows = img.height % n;
 
-	for (int i = 0; i < n; ++i)
-	{
-		if (i == threads.size() - 1)
-		{
-			threads.emplace_back(shadesThreads, i, pixeles, std::ref(img), shades, resto);
-		}
-		else
-			threads.emplace_back(shadesThreads, i, pixeles, std::ref(img), shades, 0);
+	int startRow = 0;
+	int endRow = startRow + rowsPerThread;
+
+	for (int t = 0; t < n; t++) {
+		if (t == n - 1) endRow += remainingRows;
+		threads.emplace_back(shadesThreads, startRow, endRow, std::ref(img), shades);
+		startRow = endRow;
+		endRow = startRow + rowsPerThread;
 	}
 
-	for (std::thread &thread : threads)
-	{
+	for (std::thread &thread : threads) {
 		thread.join();
 	}
 
@@ -584,9 +561,9 @@ void multiShades(ppm &img, unsigned char shades, unsigned int n)
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
 
-void brightnessThreads(int iteration, int pixeles, ppm &img, float b, int resto)
+void brightnessThreads(int startRow, int endRow, ppm &img, float b)
 {
-	for (int i = iteration * pixeles; i < pixeles * (iteration + 1)+resto; i++)
+	for (int i = startRow; i < endRow; i++)
 		for (int j = 0; j < img.width; j++)
 		{
 			pixel p = img.getPixel(i, j);
@@ -603,17 +580,19 @@ void multiBrightness(ppm &img, float b, int start, int end, unsigned int n)
 {
 	std::vector<std::thread> threads;
 	std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
-	int pixeles = img.height / n;
-	int resto = img.height % n;
+	int rowsPerThread = img.height / n;
+	int remainingRows = img.height % n;
 
-	for (int i = 0; i < n; ++i)
+	int startRow = 1;
+	int endRow = startRow + rowsPerThread;
+
+	for (int t = 0; t < n; t++)
 	{
-		if (i == threads.size() - 1)
-		{
-			threads.emplace_back(brightnessThreads, i, pixeles, std::ref(img), b, resto);
-		}
-		else
-			threads.emplace_back(brightnessThreads, i, pixeles, std::ref(img), b, 0);
+		if (t == n - 1) endRow += remainingRows - 1;
+
+		threads.emplace_back(brightnessThreads, startRow, endRow, std::ref(img), b);
+		startRow = endRow;
+		endRow = startRow + rowsPerThread;
 	}
 
 	for (std::thread &thread : threads)
@@ -823,10 +802,7 @@ void multiEdgeDetection(ppm &img, unsigned int n)
 
 	for (int t = 0; t < n; t++)
 	{
-		if (t == n - 1)
-		{
-			endRow += remainingRows;
-		}
+		if (t == n - 1) endRow += remainingRows;
 		threads.emplace_back(blackWhiteThreads, std::ref(img), startRow, endRow);
 
 		startRow = endRow;
@@ -845,12 +821,7 @@ void multiEdgeDetection(ppm &img, unsigned int n)
 
 	for (int t = 0; t < n; t++)
 	{
-		if (t == n - 1)
-		{
-			// Assign remaining rows to the last thread
-			endRow += remainingRows - 1;
-		}
-
+		if (t == n - 1) endRow += remainingRows - 1;
 		threads.emplace_back(boxBlurThreads, img, std::ref(tempImg), startRow, endRow);
 
 		startRow = endRow;
@@ -872,10 +843,7 @@ void multiEdgeDetection(ppm &img, unsigned int n)
 
 	for (int t = 0; t < n; t++)
 	{
-		if (t == n - 1)
-		{
-			endRow += remainingRows - 1;
-		}
+		if (t == n - 1) endRow += remainingRows - 1;
 		threads.emplace_back(edgeDetectionThreads, img, std::ref(result), startRow, endRow);
 
 		startRow = endRow;
@@ -890,9 +858,6 @@ void multiEdgeDetection(ppm &img, unsigned int n)
 	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
 	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
-
-
-
 	
 }
 
