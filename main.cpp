@@ -34,8 +34,8 @@ int main(int argc, char *argv[])
 
 	
 
-	if (argv[7]) {
-		string img2_string(argv[7]);
+	if (argv[6]) {
+		string img2_string(argv[6]);
 		ppm img2(img2_string);
 		aplicar(filter, p1, img, n, out, img2);
 	} else {
