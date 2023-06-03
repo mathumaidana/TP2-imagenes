@@ -18,20 +18,20 @@ using namespace std;
 // Filtro plano como ejemplo
 void plain(ppm &img, unsigned char c)
 {
-	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point inicio_timer = std::chrono::steady_clock::now();
 
 	for (int i = 0; i < img.height; i++)
 		for (int j = 0; j < img.width; j++)
 			img.setPixel(i, j, pixel(c, c, c));
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point final_timer = std::chrono::steady_clock::now(); // Fin del timer
+	std::chrono::duration<double> duracion = final_timer - inicio_timer;						  // Duración en segundos
 
-	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
+	std::cout << "Duración: " << duracion.count() << " segundos" << std::endl;
 }
 
 void brightness(ppm &img, float brillo, int start, int end)
 {
-	std::chrono::steady_clock::time_point startTime = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point inicio_timer = std::chrono::steady_clock::now();
 	for (int i = 0; i < img.height; i++)
 		for (int j = 0; j < img.width; j++)
 		{
@@ -52,15 +52,15 @@ void brightness(ppm &img, float brillo, int start, int end)
 
 			img.setPixel(i, j, pixel(nuevo_r, nuevo_g, nuevo_b));
 		}
-	std::chrono::steady_clock::time_point endTime = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = endTime - startTime;					  // Duración en segundos
+	std::chrono::steady_clock::time_point final_timer = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duracion = final_timer - inicio_timer;
 
-	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
+	std::cout << "Duración: " << duracion.count() << " segundos" << std::endl;
 }
 
 void contrast(ppm &img, float contrast)
 {
-	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point inicio_timer = std::chrono::steady_clock::now();
 
 	for (int i = 0; i < img.height; i++)
 		for (int j = 0; j < img.width; j++)
@@ -89,15 +89,15 @@ void contrast(ppm &img, float contrast)
 			img.setPixel(i, j, pixel(nuevo_r, nuevo_g, nuevo_b));
 		}
 
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point final_timer = std::chrono::steady_clock::now(); // Fin del timer
+	std::chrono::duration<double> duracion = final_timer - inicio_timer;						  // Duración en segundos
 
-	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
+	std::cout << "Duración: " << duracion.count() << " segundos" << std::endl;
 }
 
 void blackWhite(ppm &img)
 {
-	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point inicio_timer = std::chrono::steady_clock::now();
 	for (int i = 0; i < img.height; i++)
 	{
 		for (int j = 0; j < img.width; j++)
@@ -107,15 +107,15 @@ void blackWhite(ppm &img)
 			img.setPixel(i, j, pixel(promedio, promedio, promedio));
 		}
 	}
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point final_timer = std::chrono::steady_clock::now(); // Fin del timer
+	std::chrono::duration<double> duracion = final_timer - inicio_timer;						  // Duración en segundos
 
-	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
+	std::cout << "Duración: " << duracion.count() << " segundos" << std::endl;
 }
 
 void shades(ppm &img, unsigned char shades)
 {
-	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point inicio_timer = std::chrono::steady_clock::now();
 
 	for (int i = 0; i < img.height; i++)
 	{
@@ -128,15 +128,15 @@ void shades(ppm &img, unsigned char shades)
 			img.setPixel(i, j, pixel(g, g, g));
 		}
 	}
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point final_timer = std::chrono::steady_clock::now(); // Fin del timer
+	std::chrono::duration<double> duracion = final_timer - inicio_timer;						  // Duración en segundos
 
-	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
+	std::cout << "Duración: " << duracion.count() << " segundos" << std::endl;
 }
 
 void boxBlur(ppm &img)
 {
-	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
+	std::chrono::steady_clock::time_point inicio_timer = std::chrono::steady_clock::now();
 	ppm tempImg = img; // Crear una imagen temporal para almacenar los resultados
 	for (int i = 1; i < img.height - 1; i++)
 		for (int j = 1; j < img.width - 1; j++)
@@ -156,10 +156,10 @@ void boxBlur(ppm &img)
 			}
 			tempImg.setPixel(i, j, pixel(sumR / 9, sumG / 9, sumB / 9));
 		}
-	img = tempImg;																  // Reemplazar la imagen original con la imagen filtrada
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
-	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
+	img = tempImg; // Reemplazar la imagen original con la imagen filtrada
+	std::chrono::steady_clock::time_point final_timer = std::chrono::steady_clock::now(); 
+	std::chrono::duration<double> duracion = final_timer - inicio_timer;
+	std::cout << "Duración: " << duracion.count() << " segundos" << std::endl;
 }
 
 void sharpen(ppm &img)
@@ -196,19 +196,19 @@ void sharpen(ppm &img)
 			}
 
 			// Asegurarse de que los valores de los canales estén en el rango válido
-			int newR = std::min(std::max(sumR, 0), 255);
-			int newG = std::min(std::max(sumG, 0), 255);
-			int newB = std::min(std::max(sumB, 0), 255);
+			int nuevo_R = std::min(std::max(sumR, 0), 255);
+			int nuevo_G = std::min(std::max(sumG, 0), 255);
+			int nuevo_B = std::min(std::max(sumB, 0), 255);
 
 			// Establecer el nuevo valor del píxel en la imagen temporal
-			tempImg.setPixel(i, j, pixel(newR, newG, newB));
+			tempImg.setPixel(i, j, pixel(nuevo_R, nuevo_G, nuevo_B));
 		}
 	}
 
 	img = tempImg; // Reemplazar la imagen original con la imagen filtrada
 
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duration = end - start;
 
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
@@ -279,18 +279,18 @@ void edgeDetection(ppm &img)
 					pixel p = img.getPixel(i + k, j + l);
 
 					// Calcular la contribución del píxel al valor de convolución
-					int value = sobelVertical[k + 1][l + 1];
-					gx += value * p.r;
-					gy += value * p.g;
-					gy += value * p.b;
+					int valor = sobelVertical[k + 1][l + 1];
+					gx += valor * p.r;
+					gy += valor * p.g;
+					gy += valor * p.b;
 				}
 			}
 
 			// Calcular la magnitud del gradiente
-			int magnitude = sqrt(gx * gx + gy * gy);
+			int magnitud = sqrt(gx * gx + gy * gy);
 
 			// Establecer el valor de intensidad en la imagen de resultado
-			result.setPixel(i, j, pixel(magnitude, magnitude, magnitude));
+			result.setPixel(i, j, pixel(magnitud, magnitud, magnitud));
 		}
 	}
 
@@ -323,8 +323,8 @@ void merge(ppm &img1, ppm &img2, float p1)
 		}
 	}
 	img1 = img_final;
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duration = end - start;
 
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
@@ -336,13 +336,11 @@ void multiMerge(ppm &img1, ppm &img2, float p1, unsigned int n)
 	float p2 = 1 - p1;
 	ppm img_final = img1;
 
-	// Function to be executed by each thread
 	auto mergePixels = [&](int start_i, int end_i)
 	{
 		for (int i = start_i; i < end_i; i++)
 		{
-			for (int j = 0; j < img1.width; j++)
-			{ // Both images have the same resolution
+			for (int j = 0; j < img1.width; j++) {
 				pixel pixel1 = img1.getPixel(i, j);
 				pixel pixel2 = img2.getPixel(i, j);
 
@@ -354,7 +352,6 @@ void multiMerge(ppm &img1, ppm &img2, float p1, unsigned int n)
 		}
 	};
 
-	// Split the loop iterations evenly among the threads
 	int rowsPerThread = img1.height / n;
 	std::vector<std::thread> threads;
 
@@ -379,9 +376,7 @@ void multiMerge(ppm &img1, ppm &img2, float p1, unsigned int n)
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
 
-
 // MULTI
-
 void plainThreads(ppm &img, unsigned char c, int startRow, int endRow)
 {
 	for (int i = startRow; i < endRow; i++)
@@ -413,8 +408,8 @@ void multiPlain(ppm &img, unsigned char c, unsigned int n)
 	}
 
 
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duration = end - start;
 
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
@@ -445,7 +440,6 @@ void multiBlackWhite(ppm &img, unsigned int n)
 	{
 		if (t == n - 1)
 		{
-			// Assign remaining rows to the last thread
 			endRow += remainingRows - 1;
 		}
 
@@ -555,8 +549,8 @@ void multiShades(ppm &img, unsigned char shades, unsigned int n)
 		thread.join();
 	}
 
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duration = end - start;
 
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
@@ -600,8 +594,8 @@ void multiBrightness(ppm &img, float b, int start, int end, unsigned int n)
 		thread.join();
 	}
 
-	std::chrono::steady_clock::time_point endTime = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = endTime - startTime;					  // Duración en segundos
+	std::chrono::steady_clock::time_point endTime = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duration = endTime - startTime;
 
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
@@ -635,7 +629,7 @@ void sharpenThread(ppm &tempImg, int startRow, int endRow)
 				}
 			}
 
-			// Asegurarse de que los valores de los canales estén en el rango válido
+			// Asegurarse de que los valores sean validos
 			int newR = std::min(std::max(sumR, 0), 255);
 			int newG = std::min(std::max(sumG, 0), 255);
 			int newB = std::min(std::max(sumB, 0), 255);
@@ -646,7 +640,6 @@ void sharpenThread(ppm &tempImg, int startRow, int endRow)
 	}
 }
 
-// Función principal para el procesamiento multi-hilo
 void multiSharpen(ppm &img, unsigned int n)
 {
 	std::chrono::steady_clock::time_point start = std::chrono::steady_clock::now();
@@ -659,7 +652,6 @@ void multiSharpen(ppm &img, unsigned int n)
 	int startRow = 1;
 	int endRow = startRow + rowsPerThread;
 
-	// Crear los hilos y asignar las filas correspondientes a cada hilo
 	for (int i = 0; i < n - 1; i++)
 	{
 		threads.emplace_back(sharpenThread, std::ref(tempImg), startRow, endRow);
@@ -668,7 +660,6 @@ void multiSharpen(ppm &img, unsigned int n)
 	}
 	threads.emplace_back(sharpenThread, std::ref(tempImg), startRow, img.height - 1);
 
-	// Esperar a que todos los hilos terminen su ejecución
 	for (std::thread &thread : threads)
 	{
 		thread.join();
@@ -676,8 +667,8 @@ void multiSharpen(ppm &img, unsigned int n)
 
 	img = tempImg; // Reemplazar la imagen original con la imagen filtrada
 
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duration = end - start;
 
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
@@ -694,7 +685,7 @@ void boxBlurThreads(ppm img, ppm &tempImg, int startRow, int endRow)
 		for (int j = 1; j < img.width - 1; j++)
 		{
 			int sumR = 0, sumG = 0, sumB = 0;
-			int count = 0;
+			int contador = 0;
 
 			// Sumar los valores de los canales de los 9 píxeles vecinos
 			for (int k = -1; k <= 1; k++)
@@ -710,14 +701,14 @@ void boxBlurThreads(ppm img, ppm &tempImg, int startRow, int endRow)
 						sumR += p.r;
 						sumG += p.g;
 						sumB += p.b;
-						count++;
+						contador++;
 					}
 				}
 			}
 
-			int avgR = sumR / count;
-			int avgG = sumG / count;
-			int avgB = sumB / count;
+			int avgR = sumR / contador;
+			int avgG = sumG / contador;
+			int avgB = sumB / contador;
 			tempImg.setPixel(i, j, pixel(avgR, avgG, avgB));
 		}
 	}
@@ -740,7 +731,6 @@ void multiBoxBlur(ppm &img, unsigned int n)
 	{
 		if (t == n - 1)
 		{
-			// Assign remaining rows to the last thread
 			endRow += remainingRows - 1;
 		}
 
@@ -757,8 +747,8 @@ void multiBoxBlur(ppm &img, unsigned int n)
 
 	img = tempImg; // Reemplazar la imagen original con la imagen filtrada
 
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duration = end - start;
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 }
 
@@ -786,8 +776,8 @@ void edgeDetectionThreads(ppm img, ppm &result, int startRow, int endRow)
 					}
 				}
 			}
-			int magnitude = sqrt(gx * gx + gy * gy);
-			result.setPixel(i, j, pixel(magnitude, magnitude, magnitude));
+			int magnitud = sqrt(gx * gx + gy * gy);
+			result.setPixel(i, j, pixel(magnitud, magnitud, magnitud));
 		}
 }
 
@@ -855,8 +845,8 @@ void multiEdgeDetection(ppm &img, unsigned int n)
 		thread.join();
 	}
 	img = result;
-	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now(); // Fin del timer
-	std::chrono::duration<double> duration = end - start;						  // Duración en segundos
+	std::chrono::steady_clock::time_point end = std::chrono::steady_clock::now();
+	std::chrono::duration<double> duration = end - start;
 	std::cout << "Duración: " << duration.count() << " segundos" << std::endl;
 	
 }
