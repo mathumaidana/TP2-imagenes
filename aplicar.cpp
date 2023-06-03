@@ -8,13 +8,8 @@
 #include <unistd.h>
 #include <fstream>
 #include "ppm.h"
-
-
 #define ONE_OVER_BILLION 1E-9
-
 using namespace std;
-
-// El siguiente es un template basico que pueden usar como base
 
 int aplicar(string filter, float p1, string imgString, int n, string out, ppm img2)
 {
@@ -89,7 +84,7 @@ int aplicar(string filter, float p1, string imgString, int n, string out, ppm im
 	}
 	else {
 		cout << "Filtro no existe..." << endl;
-		return 0; 
+		return 0;
 	}
 
 	cout << "Escribiendo imagen" << endl;
