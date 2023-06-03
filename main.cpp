@@ -7,19 +7,11 @@
 #include <fstream>
 #include "aplicar.h"
 #include "ppm.h"
-
 #define ONE_OVER_BILLION 1E-9
-
 using namespace std;
-
-// El siguiente es un template basico que pueden usar como base
 
 int main(int argc, char *argv[])
 {
-
-	// Asumimos que los filtros sin p1 se escriben primero (por lo tanto, el primer p1 es no nulo)
-	// Asumimos que Zoom no se puede encadenar
-
 	if (string(argv[1]) == "-help")
 	{
 		cout << "Uso: ./main <filtro> <nthreads> <[p1]> <img1> <custom_output> <[p2]> <img2>" << endl;
@@ -31,9 +23,6 @@ int main(int argc, char *argv[])
 	string img(argv[4]);
 	string out = string(argv[5]);
 	
-
-	
-
 	if (argv[6]) {
 		string img2_string(argv[6]);
 		ppm img2(img2_string);
