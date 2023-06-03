@@ -14,8 +14,10 @@ Si se quiere utilizar el filtro de merge, se debe agregar la segunda imagen:
 _./main <filtro> <n_threads> <parametro_1> <imagen> <output_dir> <imagen2>_
 Las imagenes deberian tener las mismas dimensiones.
 
-Ejemplos: _./main shades 8 3 imgs/chihiro.ppm prueba.ppm_
-Ejemplos: _./main shades 8 3 imgs/chihiro.ppm prueba.ppm imgs/ashitaka.ppm_
+_Ejemplo_:
+
+- _./main shades 8 3 imgs/chihiro.ppm prueba.ppm_
+- _./main shades 8 3 imgs/chihiro.ppm prueba.ppm imgs/ashitaka.ppm_
 
 ### loader.cpp
 
@@ -26,3 +28,7 @@ Luego, ejecutar de la siguiente manera:
 _./loader <filtro> <n_threads> <paramatro_1> <input_dir> <output_dir>_
 
 Con este comando, introducimos un directorio de entrada, del cual se extraeran todos los archivos .ppm y se les aplicara un filtro. El resultado sera reenviado a el directorio especificado en output_dir.
+Merge no forma parte de los filtros en loader.
+_Ejemplos:_
+
+- _./loader gradiente 8 1 imgs prueba_
