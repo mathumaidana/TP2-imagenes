@@ -32,7 +32,8 @@ _./loader <filtro_elegido> <n_threads> <paramatro_1> <input_dir> <output_dir>_
 
 Con este comando, introducimos un directorio de entrada, del cual se extraeran todos los archivos .ppm y se les aplicara un filtro. El resultado sera reenviado a el directorio especificado en output_dir.
 Merge no forma parte de los filtros en loader.
-_Ejemplos:_
+  
+_Ejemplo:_
 
 - _./loader gradiente 8 1 imgs prueba_
 
