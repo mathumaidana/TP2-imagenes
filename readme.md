@@ -9,7 +9,7 @@ _g++ aplicar.cpp filters.cpp ppm.cpp main.cpp -pthread -o main_
 
 Luego, ejecutar de la siguiente manera:
 
-_./main <filtro> <n_threads> <parametro_1> <imagen> <output_dir>_
+_./main <filtro_elegido> <n_threads> <parametro_1> <imagen> <output_dir>_
 
 Si se quiere utilizar el filtro de merge, se debe agregar la segunda imagen:
 _./main <filtro> <n_threads> <parametro_1> <imagen> <output_dir> <imagen2>_
