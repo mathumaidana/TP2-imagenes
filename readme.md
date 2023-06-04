@@ -27,6 +27,7 @@ Colocar el siguiente comando para compilar el archivo de loader:
 _g++ aplicar.cpp filters.cpp ppm.cpp loader.cpp -pthread -o loader_
 
 Luego, ejecutar de la siguiente manera:
+  
 _./loader <filtro_elegido> <n_threads> <paramatro_1> <input_dir> <output_dir>_
 
 Con este comando, introducimos un directorio de entrada, del cual se extraeran todos los archivos .ppm y se les aplicara un filtro. El resultado sera reenviado a el directorio especificado en output_dir.
