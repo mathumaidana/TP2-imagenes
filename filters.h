@@ -23,7 +23,7 @@ void gradiente(ppm &img, int dimension);
 void vintage(ppm &img, float brillo, int start, int end);
 void kaleidoscope(ppm &img);
 void emboss(ppm &img, int start, int end);
-void canvas(ppm &img);
+void canvas(ppm &img); //a
 // FILTROS MULTI-THREAD
 
 void multiPlain(ppm &img, unsigned char c, unsigned int n);

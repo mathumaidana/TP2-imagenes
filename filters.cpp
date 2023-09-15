@@ -1049,7 +1049,7 @@ void multiVintage(ppm &img, int numThreads, float brillo)
     }
 }
 
-
+//a 
 int sobelVertical[3][3] = {
 	{1, 0, -1},
 	{2, 0, -2},
