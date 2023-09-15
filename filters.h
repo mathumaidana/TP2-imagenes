@@ -20,7 +20,7 @@ void sharpen(ppm &img);
 void edgeDetection(ppm &img); // ppm &img_target, sacamos este argumento por ahora
 void plain(ppm &img, unsigned char c);
 void gradiente(ppm &img, int dimension);
-void vintage(ppm &img, int brillo, int start, int end);
+void vintage(ppm &img, float brillo, int start, int end);
 void kaleidoscope(ppm &img);
 void emboss(ppm &img, int start, int end);
 void canvas(ppm &img);
